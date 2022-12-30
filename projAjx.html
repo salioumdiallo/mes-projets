@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+
+    <link rel="stylesheet" href="bootstrap\bootstrap4\css\bootstrap.min.css" />
+    <link rel="stylesheet" href="fontawesome\fontawesome\css\all.css" />
+    <script type="text/javascript">
+
+         var xhr = new XMLHttpRequest();
+var connect; 
+   function getMessage(){
+    xhr.open("GET", "http://chakerbm.tn/services/messages.php", true);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            afficher(xhr.responseXML);
+          }
+        }
+    }
+
+    function afficher (data){
+      var list1=document.getElementById("ul");
+      list1.innerHTML="";
+      var msg=data.getElementsByTagName("message");
+     // console.log(msg);
+
+      for(var i=0;i<msg.length;i++){
+        var li=document.createElement("li");
+        var c=msg[i].getAttribute("email")+">"+msg[i].getAttribute("message");
+        var cc=document.createTextNode(c);
+        li.appendChild(cc);
+        list1.appendChild(li);
+    //console.log(msg[i].getAttribute("id"));
+      }
+    }
+function verif(){
+  var email=document.getElementById("email").value;
+  var password=document.getElementById("password").value;
+  xhr.open("GET","http://chakerbm.tn/services/verif.php?email="+email+"&pass="+password,true);
+  xhr.send();
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState==4 )
+    if(xhr.status==200){
+      var data=xhr.responseXML;
+      //console.log(data);
+      var rs=data.getElementById("test");
+     // console.log(rs.getAttribute("value"));
+      if(rs.getAttribute("value")=="1"){
+        connect=email;
+       // alert("Bienvenue");
+var ms=document.getElementById("ms");
+var btms=document.getElementById("btms");
+ms.removeAttribute("disabled");
+btms.removeAttribute("disabled");
+var esp2=document.getElementById("espace2");
+esp2.innerHTML="";
+var esp1=document.getElementById("espace1");
+esp1.innerHTML="Bienvenue"+connect;
+
+      }else{
+        alert("verifier vis données");
+      }
+
+    }
+  }
+
+}
+
+        function inscrit (){
+          var nom=document.getElementById('nom').value;
+          var mail=document.getElementById('Maili').value;
+
+          var pass=document.getElementById('passwordi').value;
+
+            xhr.open("POST","http://chakerbm.tn/services/adduser.php",true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+            xhr.send("nom=" + nom + "&email=" + mail + "&pass=" + pass + "");
+            xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            connect=mail;
+       // alert("Bienvenue");
+var ms=document.getElementById("ms");
+var btms=document.getElementById("btms");
+ms.removeAttribute("disabled");
+btms.removeAttribute("disabled");
+var esp2=document.getElementById("espace2");
+esp2.innerHTML="";
+var esp1=document.getElementById("espace1");
+esp1.innerHTML="Bienvenue"+connect;
+
+            
+
+          }
+        }
+
+   }
+
+   
+
+    function envoyer () {
+      var esp2=document.getElementById("ms").value;
+
+        xhr.open("POST","http://chakerbm.tn/services/addmessage.php",true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+        xhr.send("message=" + esp2 + "&email=" + connect + "");
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            getMessage();
+          }
+        }
+    
+    }
+    </script>
+  </head>
+  <body onload="getMessage();">
+
+    <div class="container">
+      <div class="row mt-4">
+        <div class="col-12">
+          <card class="card bg-primary text-white">
+            <div class="card-header">
+              <h3>
+                <strong> Chat ESSAT V1.0 </strong>
+              </h3>
+            </div>
+          </card>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+      <div class="col-3">
+         <div class="card" style="width: 18rem; ">
+            <div class="card-header" id="espace1">
+              <p class="card-text">
+                Connexion:
+                <input type="text " id="email" placeholder="votre mail" />
+                <br />
+                <br />
+                <input type="text" name="" id="password" placeholder="votre password"/>
+              </p>
+              <a  href=# class="btn btn-primary" onclick="verif();">Connexion</a>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-3" id="espace2">
+              <div class="card"  style="width: 18rem; ">
+                <div class="card-header" >
+                  <p class="card-text">
+                    Inscription:
+                    <input type="text " id="nom" placeholder="votre Nom" />
+                    <br />
+                    <br />
+                    <input type="text " id="Maili" placeholder="votre mail" />
+                    <br />
+                    <br />
+                    <input
+                      type="text"
+                      name=""
+                      id="passwordi"
+                      placeholder="votre password"
+                    />
+                  </p>
+                  <a href="#" class="btn btn-primary" onclick="inscrit();">Inscription</a>
+                </div>
+              </div>
+            </div>
+      </div>
+
+        </div>
+        <div class="col-9">
+       
+                <div class="form-row align-items-center">
+                    <div class="col-0.5"> 
+                        </div>
+                  <div class="col-8">
+                   
+                    <input type="text" class="form-control mr-6" id="ms" placeholder="Message" disabled>
+                  </div>
+                  <div class="col-3">
+                    <button type="submit" class="btn btn-warning " id="btms" disabled onclick="envoyer();">Envoi message</button>
+                  </div>
+                 
+                  </div>
+                
+
+            <div class="card-header mt-4">
+            
+<ul id="ul">
+  
+</ul>
+
+                   
+             
+     
+ 
+        </div>
+         </div>
+        </div>
+  
+  </body>
+</html>
